@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Tabs, useRouter } from 'expo-router';
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import tw from 'tailwind-react-native-classnames';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 SplashScreen.preventAutoHideAsync(); // Ensure splash screen is handled
 
@@ -47,22 +48,11 @@ export default function Layout() {
           }}
         />
         <Tabs.Screen
-          name="location"
+          name="maps"
           options={{
             tabBarLabel: '',
             tabBarIcon: ({ color }) => (
-              <MaterialIcons name="location-on" size={30} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="qrcode"
-          options={{
-            tabBarLabel: '',
-            tabBarIcon: ({ color }) => (
-              <View style={styles.qrCodeTab}>
-                <MaterialCommunityIcons name="qrcode-scan" size={40} color={color} />
-              </View>
+              <MaterialCommunityIcons name="google-maps" size={24} color="black" />
             ),
           }}
         />
@@ -80,7 +70,7 @@ export default function Layout() {
           options={{
             tabBarLabel: '',
             tabBarIcon: ({ color }) => (
-              <FontAwesome name="gear" size={24} color={color} />
+              <FontAwesome6 name="user-circle" size={24} color="black" />
             ),
           }}
         />

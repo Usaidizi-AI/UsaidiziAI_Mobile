@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import tw from 'tailwind-react-native-classnames';
 import { Colors } from '@/constants/Colors';
 import { useRouter } from 'expo-router';
-import PrivadoSecure from '../assets/images/Logo.png'; // Adjust the path as necessary
+import PrivadoSecure from '../assets/images/logo.png'; // Adjust the path as necessary
 
 const { width } = Dimensions.get('window');
 
