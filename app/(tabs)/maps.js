@@ -1,187 +1,161 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Image, Alert, Modal, TextInput, Switch, Vibration, Animated } from 'react-native';
-import tw from "tailwind-react-native-classnames";
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from 'react-native';
+import MapView, { Marker, Polyline } from 'react-native-maps';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import tw from 'tailwind-react-native-classnames';
 import { FontAwesome5 } from '@expo/vector-icons';
-import MapView, { Marker, Polyline } from 'react-native-maps'; 
-import * as Location from 'expo-location'; // Location services
-import * as Speech from 'expo-speech';  // Speech services for voice navigation
+import * as Speech from 'expo-speech';
+import * as Permissions from 'expo-permissions';
+import { Audio } from 'expo-av';
 
-export default function LocationScreen() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [indoor, setIndoor] = useState(false);
-  const [selectedBuilding, setSelectedBuilding] = useState(null); 
-  const [destination, setDestination] = useState(''); // New: user-defined destination
-  const [wheelchairAccess, setWheelchairAccess] = useState(false); // Accessibility options
-  const [isHighContrast, setIsHighContrast] = useState(false); // High contrast mode
-  const [helpModalVisible, setHelpModalVisible] = useState(false); // Emergency assistance modal
-  const [animation] = useState(new Animated.Value(0)); // For animations
-  const [navigationInstructions, setNavigationInstructions] = useState(''); // For voice navigation
+// Map Screen (with 3D perspective and speech)
+const MapScreen = ({ navigation }) => {
+  const [coordinates] = useState([
+    { latitude: -1.2921, longitude: 36.8219 },
+    { latitude: -1.28333, longitude: 36.81667 },
+    { latitude: -1.275, longitude: 36.8133 },
+  ]);
 
-  // Fetch location on mount
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-      let loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc);
-    })();
+    // Request permissions for voice recognition
+    const getPermissions = async () => {
+      await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+    };
+    getPermissions();
   }, []);
 
-  // Start voice navigation and haptic feedback
-  const startVoiceNavigation = (destination) => {
-    if (!destination) {
-      Alert.alert("Navigation Error", "Please enter a destination.");
-      return;
-    }
-
-    const directions = `Navigating to ${destination}. Please follow the path shown on the map.`;
-    Speech.speak(directions);
-    Vibration.vibrate();
-    setNavigationInstructions(directions);
-    Alert.alert("Voice Navigation", directions);
-  };
-
-  // Handle building selection with animation
-  const handleBuildingSelect = (building) => {
-    setSelectedBuilding(building);
-    setIndoor(true);
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  // Toggle high contrast mode
-  const toggleHighContrast = () => {
-    setIsHighContrast(!isHighContrast);
-  };
-
-  // Open emergency assistance modal
-  const requestHelp = () => {
-    setHelpModalVisible(true);
+  const speakDirection = (direction) => {
+    const options = {
+      language: 'en',
+    };
+    Speech.speak(direction, options);
   };
 
   return (
-    <View style={tw`flex-1 ${isHighContrast ? 'bg-black' : 'bg-white'}`}>
-      {/* Modal for requesting help */}
-      <Modal visible={helpModalVisible} transparent={true} animationType="slide">
-        <View style={tw`flex-1 justify-center items-center bg-black bg-opacity-50`}>
-          <View style={tw`bg-white rounded-xl p-6`}>
-            <Text style={tw`text-lg text-purple-800 font-bold`}>Need Assistance?</Text>
-            <Text style={tw`text-base mt-4`}>You can request help if you're lost or need assistance navigating.</Text>
-            <TouchableOpacity 
-              style={tw`bg-red-600 p-4 rounded-xl mt-4`} 
-              onPress={() => {
-                setHelpModalVisible(false);
-                Alert.alert("Help Requested", "A helper is on their way.");
-              }}
-            >
-              <Text style={tw`text-white text-center`}>Request Help</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={tw`mt-4`} onPress={() => setHelpModalVisible(false)}>
-              <Text style={tw`text-purple-800 text-center`}>Cancel</Text>
-            </TouchableOpacity>
+    <View style={tw`flex-1`}>
+      {/* Map Header */}
+      <View style={tw`bg-blue-600 p-4 flex-row justify-between items-center`}>
+        <View style={tw`flex-row items-center`}>
+          <View style={tw`bg-white rounded-full w-8 h-8 items-center justify-center`}>
+            <Text style={tw`text-blue-600 text-lg font-bold`}>4</Text>
           </View>
+          <Text style={tw`text-white ml-3 text-lg font-semibold`}>Turn Left</Text>
         </View>
-      </Modal>
+        <TouchableOpacity style={tw`flex-row items-center`} onPress={() => speakDirection('Turn Left')}>
+          <FontAwesome5 name="volume-up" size={20} color="white" />
+          <Text style={tw`text-white ml-2`}>Speak Directions</Text>
+        </TouchableOpacity>
+      </View>
 
-      <ScrollView style={tw`flex-1 mt-8`}>
-        {/* Header */}
-        <View style={tw`bg-purple-900 p-6`}>
-          <Text style={[tw`text-white text-2xl`, { fontFamily: 'outfit-bold' }]}>Explore & Navigate</Text>
-          <Text style={[tw`text-white text-xl mt-2`, { fontFamily: 'outfit' }]}>Your guide to accessible destinations.</Text>
-        </View>
+      {/* Map View with 3D Effect */}
+      <MapView
+        style={tw`flex-1`}
+        initialRegion={{
+          latitude: -1.2921,
+          longitude: 36.8219,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }}
+        camera={{
+          center: { latitude: -1.2921, longitude: 36.8219 },
+          pitch: 45, // Tilt for 3D effect
+          heading: 90, // Orientation of the map
+          altitude: 2000,
+          zoom: 15,
+        }}
+      >
+        {/* Markers and Polyline */}
+        <Polyline
+          coordinates={coordinates}
+          strokeColor="#FF0000" // red
+          strokeWidth={6}
+        />
+        {coordinates.map((coordinate, index) => (
+          <Marker key={index} coordinate={coordinate} />
+        ))}
+      </MapView>
 
-        {/* High contrast and accessibility toggles */}
-        <View style={tw`flex-row justify-between p-4`}>
-          <View style={tw`flex-row items-center`}>
-            <Text style={tw`text-purple-800 text-lg`}>High Contrast Mode</Text>
-            <Switch value={isHighContrast} onValueChange={toggleHighContrast} />
-          </View>
-          <View style={tw`flex-row items-center`}>
-            <Text style={tw`text-purple-800 text-lg`}>Wheelchair Access</Text>
-            <Switch value={wheelchairAccess} onValueChange={setWheelchairAccess} />
-          </View>
-        </View>
-
-        {/* Input for destination */}
-        <View style={tw`p-4`}>
-          <Text style={tw`text-lg text-purple-800`}>Enter your destination</Text>
-          <TextInput 
-            style={tw`border p-2 mt-2 rounded-xl`} 
-            placeholder="Where would you like to go?" 
-            onChangeText={setDestination}
-            value={destination}
-          />
-          <TouchableOpacity 
-            style={tw`bg-purple-800 p-4 rounded-xl mt-4`} 
-            onPress={() => startVoiceNavigation(destination)}
-          >
-            <Text style={tw`text-white text-center`}>Start Navigation</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Animated Map Section */}
-        <Animated.View style={[tw`p-4 mt-4`, { opacity: animation }]}>
-          <Text style={[tw`text-lg text-purple-800`, { fontFamily: 'outfit-bold' }]}>Directions</Text>
-          {location && (
-            <MapView
-              style={{ height: 300, borderRadius: 20, marginTop: 10 }}
-              region={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-              showsUserLocation={true}
-              followsUserLocation={true}
-              rotateEnabled={true}
-              pitchEnabled={true}
-            >
-              <Marker coordinate={location.coords} title="You are here" pinColor="purple" />
-              {destination && (
-                <Polyline 
-                  coordinates={[
-                    { latitude: location.coords.latitude, longitude: location.coords.longitude },
-                    { latitude: location.coords.latitude + 0.001, longitude: location.coords.longitude + 0.001 } // Simulating destination
-                  ]}
-                  strokeColor="red"
-                  strokeWidth={3}
-                  lineDashPattern={[1, 1]} // Dotted line for navigation
-                />
-              )}
-            </MapView>
-          )}
-          {errorMsg ? <Text style={tw`text-red-600 mt-4`}>{errorMsg}</Text> : null}
-          {navigationInstructions && <Text style={tw`mt-4 text-purple-800`}>{navigationInstructions}</Text>}
-        </Animated.View>
-
-        {/* Building selection and details */}
-        <View style={tw`p-4`}>
-          <Text style={[tw`text-lg text-purple-800`, { fontFamily: 'outfit-bold' }]}>Choose a Building</Text>
-          
-          <TouchableOpacity style={tw`bg-purple-800 p-4 rounded-xl mt-4`} onPress={() => handleBuildingSelect("Central Library")}>
-            <View style={tw`flex-row items-center`}>
-              <FontAwesome5 name="building" size={24} color="white" />
-              <Text style={[tw`text-white ml-4`, { fontFamily: 'outfit' }]}>Central Library</Text>
-              <Image source={{ uri: 'https://example.com/library-3d-preview.png' }} style={{ width: 40, height: 40, marginLeft: 'auto' }} />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={tw`bg-purple-800 p-4 rounded-xl mt-4`} onPress={() => handleBuildingSelect("Student Center")}>
-            <View style={tw`flex-row items-center`}>
-              <FontAwesome5 name="building" size={24} color="white" />
-              <Text style={[tw`text-white ml-4`, { fontFamily: 'outfit' }]}>Student Center</Text>
-              <Image source={{ uri: 'https://example.com/student-center-3d.png' }} style={{ width: 40, height: 40, marginLeft: 'auto' }} />
-            </View>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+      {/* Action Buttons */}
+      <TouchableOpacity style={styles.speechButton} onPress={() => speakDirection('You have reached your destination')}>
+        <FontAwesome5 name="volume-up" size={24} color="white" />
+        <Text style={styles.speechButtonText}>Speak: Reached Destination</Text>
+      </TouchableOpacity>
     </View>
   );
+};
+
+// Profile Screen (with added speech and features)
+const ProfileScreen = ({ navigation }) => {
+  const [name, setName] = useState('John Doe');
+  const [age, setAge] = useState(30);
+
+  const speakProfile = () => {
+    Speech.speak(`Hello, your name is ${name} and you are ${age} years old.`);
+  };
+
+  return (
+    <View style={tw`flex-1 bg-white p-4`}>
+      <Text style={tw`text-2xl font-bold text-center`}>Profile</Text>
+
+      <View style={tw`bg-gray-200 p-4 rounded-lg mt-4`}>
+        <Text style={tw`text-lg`}>Name: {name}</Text>
+        <Text style={tw`text-lg mt-2`}>Age: {age}</Text>
+      </View>
+
+      {/* Speech Interaction */}
+      <TouchableOpacity style={styles.speechButton} onPress={speakProfile}>
+        <FontAwesome5 name="volume-up" size={24} color="white" />
+        <Text style={styles.speechButtonText}>Speak Profile</Text>
+      </TouchableOpacity>
+
+      {/* Update Profile */}
+      <View style={tw`mt-4`}>
+        <TextInput
+          style={tw`bg-gray-100 p-2 rounded-lg mb-4`}
+          placeholder="Update Name"
+          onChangeText={(text) => setName(text)}
+        />
+        <TextInput
+          style={tw`bg-gray-100 p-2 rounded-lg mb-4`}
+          placeholder="Update Age"
+          keyboardType="numeric"
+          onChangeText={(text) => setAge(Number(text))}
+        />
+        <Button title="Update Profile" onPress={() => Alert.alert('Profile Updated')} />
+      </View>
+    </View>
+  );
+};
+
+// Stack Navigator
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="MapScreen">
+        <Stack.Screen name="MapScreen" component={MapScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
+
+// Styles
+const styles = StyleSheet.create({
+  speechButton: {
+    backgroundColor: '#FF5B5B',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 10,
+    margin: 20,
+    elevation: 2,
+  },
+  speechButtonText: {
+    color: 'white',
+    fontSize: 18,
+    marginLeft: 10,
+  },
+});
