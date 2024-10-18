@@ -1,5 +1,7 @@
 ====> use this youtube Iink to view our demo
 https://youtu.be/1sbLZTd3FMc?si=yFGGL44MouPM10Mv
+[![Watch the video](https://img.youtube.com/vi/1sbLZTd3FMc/hqdefault.jpg)](https://youtu.be/1sbLZTd3FMc?si=yFGGL44MouPM10Mv)
+
 
 ![WhatsApp Image 2024-10-19 at 00 50 47_e88dce71](https://github.com/user-attachments/assets/c3d1b48a-7c59-4dd2-a2ba-868f3e8ce6cb)
 ![WhatsApp Image 2024-10-19 at 00 50 47_4360925f](https://github.com/user-attachments/assets/28eef72f-4349-4cac-a08d-ee5cc58f72d1)
