@@ -47,9 +47,7 @@ export default function ProfileScreen() {
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <View style={{ position: "relative" }}>
           <Image
-            source={{
-              uri: "https://randomuser.me/api/portraits/men/10.jpg",
-            }}
+            source={require('../../assets/images/jeph.jpg')}
             style={{ width: 90, height: 90, borderRadius: 100 }}
           />
           <TouchableOpacity
