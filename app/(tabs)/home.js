@@ -25,7 +25,7 @@ export default function HomeScreen() {
           <View>
             <Text style={[tw`text-white text-lg`, { fontFamily: 'outfit-bold' }]}>Welcome!</Text>
             <Text style={[tw`text-white text-xl`, { fontFamily: 'outfit' }]}>Caleb Jephunneh</Text>
-            <Text style={[tw`text-white text-xl`, { fontFamily: 'outfit' }]}>HakiSpeaks</Text>
+            <Text style={[tw`text-white text-xl`, { fontFamily: 'outfit' }]}>Usaidizi.AI</Text>
           </View>
         </View>
       </View>
@@ -35,6 +35,20 @@ export default function HomeScreen() {
         
         {/* Feature Cards */}
         <Text style={[tw`text-gray-900 text-2xl mb-6`, { fontFamily: 'outfit-bold' }]}>Explore Features</Text>
+
+        <View style={tw`p-6 rounded-2xl border border-purple-700 mt-4`}>
+          <View style={tw`flex-row items-center`}>
+            <FontAwesome5 name="exclamation-circle" size={48} color="#6b21a8" />
+            <View style={tw`ml-4`}>
+              <Text style={[tw`text-black text-lg mt-1`, { fontFamily: 'outfit-bold' }]}>Emergency Services</Text>
+              <Text style={[tw`text-gray-600`, { fontFamily: 'outfit' }]}>Quickly access emergency contacts and services</Text>
+              <TouchableOpacity onPress={() => navigateTo('emergencyContacts/page')}>
+                <Text style={[tw`text-purple-700 mt-2`, { fontFamily: 'outfit-medium' }]}>Access Now &gt;&gt;</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        
         <View style={tw`flex-row flex-wrap justify-between`}>
           <FeatureCard
             icon="first-aid"
@@ -72,18 +86,12 @@ export default function HomeScreen() {
             description="Connect with others for support"
             onPress={() => navigateTo('communityForum')}
           />
+          <TouchableOpacity style={tw`w-1/2`} onPress={() => navigateTo('report-incident/page')}>
+              <Card icon="exclamation-triangle" title="Report Incident" description="Report any other incident" />
+            </TouchableOpacity>
         </View>
 
-        {/* Advertise Your Business Section */}
-        <View style={tw`p-6 mt-4 bg-gray-100 rounded-2xl border border-gray-300 mb-4`}>
-          <Text style={[tw`text-black text-lg`, { fontFamily: 'outfit-bold' }]}>Advertise Your Business With Us</Text>
-          <Text style={[tw`text-gray-600 mt-2`, { fontFamily: 'outfit' }]}>
-            Reach thousands of potential customers by advertising your business on our platform.
-          </Text>
-          <TouchableOpacity onPress={() => navigateTo('advertiseWithUs')}>
-            <Text style={[tw`text-purple-700 mt-2`, { fontFamily: 'outfit-medium' }]}>Learn More &gt;&gt;</Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
     </ScrollView>
   );

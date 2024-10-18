@@ -69,17 +69,17 @@ const index = () => {
           </View>
           {/* sign in button */}
           <TouchableOpacity 
-            // onPress={() => router.replace('auth/sign-up')}
+            onPress={() => router.replace('auth/sign-up')}
           style={{
             padding: 20,
-            backgroundColor: Colors.PRIMARY,
+            backgroundColor: 'black',
             borderRadius: 15,
             marginTop: 50,    
           }}>
             <Text style={{
                 fontFamily: 'outfit',
                 textAlign: 'center',
-                color: Colors.WHITE,
+                color: 'white',
             }}>Create Account</Text>
           </TouchableOpacity>
     

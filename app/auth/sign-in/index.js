@@ -72,14 +72,14 @@ export default function index() {
             onPress={() => router.replace('/home')}
           style={{
             padding: 20,
-            backgroundColor: Colors.PRIMARY,
+            backgroundColor: 'black',
             borderRadius: 15,
             marginTop: 50,    
           }}>
             <Text style={{
                 fontFamily: 'outfit',
                 textAlign: 'center',
-                color: Colors.WHITE,
+                color: 'white',
             }}>Sign In</Text>
           </TouchableOpacity>
     
