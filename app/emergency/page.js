@@ -13,7 +13,7 @@ const emergencyContacts = [
   { id: 3, name: 'Fire Department', phone: '123-456-7892', icon: 'fire', color: '#FF6347' },
   { id: 4, name: 'Local Volunteer Organization', phone: '123-456-7893', icon: 'hands-helping', color: '#32CD32' },
   { id: 5, name: 'Social Services', phone: '123-456-7894', icon: 'users', color: '#8A2BE2' },
-  { id: 6, name: 'Mental Health Support', phone: 'wa.me/+254769123018', icon: 'brain', color: '#FFD700' },
+  { id: 6, name: 'Mental Health Support', phone: 'https://shorturl.at/c99iN', icon: 'brain', color: '#FFD700' },
 ];
 
 const EmergencyContactsScreen = () => {
@@ -30,7 +30,7 @@ const EmergencyContactsScreen = () => {
   };
 
   const handleMicrophonePress = () => {
-    const speechText = emergencyContacts.map(contact => `${contact.name} can be reached at ${contact.phone}.`).join(' ') + 'Tap on any contact to call them.';
+    const speechText = emergencyContacts.map(contact => `${contact.name} can be reached at ${contact.phone}.`).join(' ') + 'Tap on any contact to call them. let me know if you need any help';
     Speech.speak(speechText, { language: 'en' });
   };
 

@@ -1,174 +1,67 @@
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Button, Alert } from 'react-native';
-// import MapView, { Marker, Polyline } from 'react-native-maps';
-// import { createStackNavigator } from '@react-navigation/stack';
-// import { NavigationContainer } from '@react-navigation/native';
-// import tw from 'tailwind-react-native-classnames';
-// import { FontAwesome5 } from '@expo/vector-icons';
-// import * as Speech from 'expo-speech';
-// import * as Permissions from 'expo-permissions';
-// import { Audio } from 'expo-av';
+import React from 'react';
+import { StyleSheet, View, ActivityIndicator, TouchableOpacity, Text } from 'react-native';
+import { WebView } from 'react-native-webview';
+import * as Speech from 'expo-speech'; // Import Speech from expo-speech
 
-// // Map Screen (with 3D perspective and speech)
-// const MapScreen = ({ navigation }) => {
-//   const [coordinates] = useState([
-//     { latitude: -1.2921, longitude: 36.8219 },
-//     { latitude: -1.28333, longitude: 36.81667 },
-//     { latitude: -1.275, longitude: 36.8133 },
-//   ]);
+const Maps = () => {
+  // Function to read the text aloud
+  const speak = () => {
+    Speech.speak("What do you want to go to?", {
+      language: 'en', // Specify the language if needed
+      pitch: 1, // Adjust the pitch
+      rate: 1, // Adjust the speech rate
+    });
+  };
 
-//   useEffect(() => {
-//     // Request permissions for voice recognition
-//     const getPermissions = async () => {
-//       await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-//     };
-//     getPermissions();
-//   }, []);
-
-//   const speakDirection = (direction) => {
-//     const options = {
-//       language: 'en',
-//     };
-//     Speech.speak(direction, options);
-//   };
-
-//   return (
-//     <View style={tw`flex-1`}>
-//       {/* Map Header */}
-//       <View style={tw`bg-blue-600 p-4 flex-row justify-between items-center`}>
-//         <View style={tw`flex-row items-center`}>
-//           <View style={tw`bg-white rounded-full w-8 h-8 items-center justify-center`}>
-//             <Text style={tw`text-blue-600 text-lg font-bold`}>4</Text>
-//           </View>
-//           <Text style={tw`text-white ml-3 text-lg font-semibold`}>Turn Left</Text>
-//         </View>
-//         <TouchableOpacity style={tw`flex-row items-center`} onPress={() => speakDirection('Turn Left')}>
-//           <FontAwesome5 name="volume-up" size={20} color="white" />
-//           <Text style={tw`text-white ml-2`}>Speak Directions</Text>
-//         </TouchableOpacity>
-//       </View>
-
-//       {/* Map View with 3D Effect */}
-//       <MapView
-//         style={tw`flex-1`}
-//         initialRegion={{
-//           latitude: -1.2921,
-//           longitude: 36.8219,
-//           latitudeDelta: 0.05,
-//           longitudeDelta: 0.05,
-//         }}
-//         camera={{
-//           center: { latitude: -1.2921, longitude: 36.8219 },
-//           pitch: 45, // Tilt for 3D effect
-//           heading: 90, // Orientation of the map
-//           altitude: 2000,
-//           zoom: 15,
-//         }}
-//       >
-//         {/* Markers and Polyline */}
-//         <Polyline
-//           coordinates={coordinates}
-//           strokeColor="#FF0000" // red
-//           strokeWidth={6}
-//         />
-//         {coordinates.map((coordinate, index) => (
-//           <Marker key={index} coordinate={coordinate} />
-//         ))}
-//       </MapView>
-
-//       {/* Action Buttons */}
-//       <TouchableOpacity style={styles.speechButton} onPress={() => speakDirection('You have reached your destination')}>
-//         <FontAwesome5 name="volume-up" size={24} color="white" />
-//         <Text style={styles.speechButtonText}>Speak: Reached Destination</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// // Profile Screen (with added speech and features)
-// const ProfileScreen = ({ navigation }) => {
-//   const [name, setName] = useState('John Doe');
-//   const [age, setAge] = useState(30);
-
-//   const speakProfile = () => {
-//     Speech.speak(`Hello, your name is ${name} and you are ${age} years old.`);
-//   };
-
-//   return (
-//     <View style={tw`flex-1 bg-white p-4`}>
-//       <Text style={tw`text-2xl font-bold text-center`}>Profile</Text>
-
-//       <View style={tw`bg-gray-200 p-4 rounded-lg mt-4`}>
-//         <Text style={tw`text-lg`}>Name: {name}</Text>
-//         <Text style={tw`text-lg mt-2`}>Age: {age}</Text>
-//       </View>
-
-//       {/* Speech Interaction */}
-//       <TouchableOpacity style={styles.speechButton} onPress={speakProfile}>
-//         <FontAwesome5 name="volume-up" size={24} color="white" />
-//         <Text style={styles.speechButtonText}>Speak Profile</Text>
-//       </TouchableOpacity>
-
-//       {/* Update Profile */}
-//       <View style={tw`mt-4`}>
-//         <TextInput
-//           style={tw`bg-gray-100 p-2 rounded-lg mb-4`}
-//           placeholder="Update Name"
-//           onChangeText={(text) => setName(text)}
-//         />
-//         <TextInput
-//           style={tw`bg-gray-100 p-2 rounded-lg mb-4`}
-//           placeholder="Update Age"
-//           keyboardType="numeric"
-//           onChangeText={(text) => setAge(Number(text))}
-//         />
-//         <Button title="Update Profile" onPress={() => Alert.alert('Profile Updated')} />
-//       </View>
-//     </View>
-//   );
-// };
-
-// // Stack Navigator
-// const Stack = createStackNavigator();
-
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <Stack.Navigator initialRouteName="MapScreen">
-//         <Stack.Screen name="MapScreen" component={MapScreen} options={{ headerShown: false }} />
-//         <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-//       </Stack.Navigator>
-//     </NavigationContainer>
-//   );
-// }
-
-// // Styles
-// const styles = StyleSheet.create({
-//   speechButton: {
-//     backgroundColor: '#FF5B5B',
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     padding: 16,
-//     borderRadius: 10,
-//     margin: 20,
-//     elevation: 2,
-//   },
-//   speechButtonText: {
-//     color: 'white',
-//     fontSize: 18,
-//     marginLeft: 10,
-//   },
-// });
-
-import { View, Text } from 'react-native'
-import React from 'react'
-
-const maps = () => {
   return (
-    <View>
-      <Text>maps</Text>
+    <View style={styles.container}>
+      <WebView
+        source={{ uri: 'https://ability.or.ke/mapability/' }}
+        style={styles.webview}
+        javaScriptEnabled={true} // Enable JavaScript
+        domStorageEnabled={true} // Enable DOM storage
+        startInLoadingState={true} // Show loading indicator
+        renderLoading={() => (
+          <ActivityIndicator
+            style={styles.loadingIndicator}
+            size="large"
+            color="#0000ff"
+          />
+        )}
+      />
+      <TouchableOpacity style={styles.microphoneButton} onPress={speak}>
+        <Text style={styles.microphoneText}>🎤</Text>
+      </TouchableOpacity>
     </View>
-  )
-}
+  );
+};
 
-export default maps
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Make sure the container takes full height
+  },
+  webview: {
+    flex: 1, // Allow WebView to take the full space of its parent
+    marginTop: 30, // Leave some space at the top
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  microphoneButton: {
+    position: 'absolute',
+    bottom: 30, // Position it above the bottom of the screen
+    right: 30, // Position it to the right
+    backgroundColor: '#6200EE', // Change to your preferred color
+    borderRadius: 30,
+    padding: 10,
+    elevation: 5,
+  },
+  microphoneText: {
+    fontSize: 24, // Make the microphone icon larger
+    color: 'white',
+  },
+});
+
+export default Maps;

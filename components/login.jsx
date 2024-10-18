@@ -1,45 +1,46 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import tw from 'tailwind-react-native-classnames';
-import { Colors } from '@/constants/Colors';
 import { useRouter } from 'expo-router';
-import PrivadoSecure from '../assets/images/logo.png'; // Adjust the path as necessary
+import tw from 'tailwind-react-native-classnames';
+import PrivadoSecure from '../assets/images/logo.png'; // Adjust path as necessary
+import { Colors } from '@/constants/Colors'; // Ensure your Colors module is well-defined
 
 const { width } = Dimensions.get('window');
 
 export default function App() {
   const router = useRouter();
+
   return (
     <LinearGradient
-      colors={['#4CAF50', '#2E7D32']}
+      colors={['#43C6AC', '#191654']} // Modern gradient for fresh and sleek look
       style={styles.gradient}
     >
       <View style={styles.container}>
-        {/* <Image
-          source={require('../assets/images/image copy 2.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        /> */}
         <Text style={styles.title}>Usaidizi AI</Text>
+        <Text style={styles.subtitle}>Empowering Assistance with AI</Text>
+
+        {/* Spacer between Title and the Microsoft Powered Text */}
+        <View style={styles.smallSpacer} />
 
         <Text style={styles.securedText}>Powered by Microsoft</Text>
 
-        {/* Privado Secure Logo */}
-        <Image
-          source={PrivadoSecure}
-          style={styles.privadoSecureLogo}
-          resizeMode="contain"
-        />
 
-        {/* Spacing */}
+        {/* Spacer between the logo and button */}
         <View style={styles.spacer} />
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push('/auth/sign-in')}
         >
-          <Text style={styles.buttonText}>Get Started</Text>
+          <LinearGradient
+            colors={['#43C6AC', '#F8FFAE']} // Gradient Button for a modern look
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.buttonGradient}
+          >
+            <Text style={styles.buttonText}>Get Started</Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </LinearGradient>
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     width: '100%',
+    justifyContent: 'center',
   },
   container: {
     flex: 1,
@@ -59,52 +61,58 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     width: '100%',
   },
-  logo: {
-    width: 200,
-    height: 200,
-    marginBottom: 20,
-  },
   title: {
-    color: Colors.WHITE,
-    fontSize: width * 0.08, // Responsive font size
+    color: 'white',
+    fontSize: width * 0.09, // Larger, more prominent font
     fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
+    
     textAlign: 'center',
+    letterSpacing: 2, // Slight spacing for elegance
   },
-  privadoSecureLogo: {
+  subtitle: {
+    color: 'white',
+    fontSize: width * 0.045, // Smaller font for subtitle
+    fontWeight: '300',
     marginTop: 10,
-    width: 110,
-    height: 30,
+    textAlign: 'center',
+    opacity: 0.85, // Slight opacity for a modern look
+  },
+  smallSpacer: {
+    height: 10, // Spacer between title and Microsoft text
   },
   securedText: {
-    color: Colors.WHITE,
-    fontSize: width * 0.045, // Smaller font size for the secured text
+    color: 'white',
+    fontSize: width * 0.04, // Slightly smaller for balance
     textAlign: 'center',
-    marginTop: 5,
+    marginBottom: 15,
+    opacity: 0.9,
+  },
+  privadoSecureLogo: {
+    width: 100, // Smaller but well-centered
+    height: 25,
+    marginTop: 15,
+    opacity: 0.8,
   },
   spacer: {
-    height: 40, // Space between secured text and button
+    height: 50, // Spacer between logo and button
   },
   button: {
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    backgroundColor: Colors.BLUE, // Ensure this is defined in your Colors module
-    borderRadius: 25,
-    marginTop: 20,
-    width: '85%', // Adjusted for better responsiveness
+    width: '80%', // Button should fit nicely in different screen sizes
+    borderRadius: 30,
+    overflow: 'hidden', // Ensures the gradient is clipped inside the button
+  },
+  buttonGradient: {
+    paddingVertical: 18,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
   },
   buttonText: {
     fontSize: width * 0.05,
-    fontFamily: 'outfit', // Ensure you have this font loaded or choose an alternative
+    fontFamily: 'outfit-medium', // Consider modern fonts
     textAlign: 'center',
-    color: Colors.WHITE,
-    fontWeight: 'bold', // Make the text bold
+    color: Colors.DARK,
+    fontWeight: '600',
+    letterSpacing: 1,
   },
 });

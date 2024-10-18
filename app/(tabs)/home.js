@@ -45,7 +45,7 @@ export default function HomeScreen() {
               <View style={tw`ml-4`}>
                 <Text style={[tw`text-black text-lg mt-1`, { fontFamily: 'outfit-bold' }]}>Emergency Services</Text>
                 <Text style={[tw`text-gray-600`, { fontFamily: 'outfit' }]}>Quickly access emergency contacts and services</Text>
-                <TouchableOpacity onPress={() => navigateTo('emergencyContacts/page')}>
+                <TouchableOpacity onPress={() => navigateTo('emergency/page')}>
                   <Text style={[tw`text-purple-700 mt-2`, { fontFamily: 'outfit-medium' }]}>Access Now &gt;&gt;</Text>
                 </TouchableOpacity>
               </View>
@@ -63,31 +63,30 @@ export default function HomeScreen() {
               icon="map-marked-alt"
               title="Building Navigation"
               description="Navigate accessible buildings easily"
-              onPress={() => navigateTo('navigation')}
+              onPress={() => navigateTo('navigation/page')}
             />
             <FeatureCard
               icon="shopping-cart"
               title="Marketplace"
               description="Buy and sell essential items"
-              onPress={() => navigateTo('marketplace')}
+              onPress={() => navigateTo('shop')}
             />
             <FeatureCard
               icon="phone-alt"
               title="Online Doctor Calls"
               description="Consult with your doctor online"
-              onPress={() => navigateTo('doctorCalls')}
+              onPress={() => navigateTo('doctors/page')}
             />
             <FeatureCard
               icon="assistive-listening-systems"
               title="Voice Commands"
               description="Use voice to control the app"
-              onPress={() => navigateTo('voiceCommands')}
             />
             <FeatureCard
               icon="comments"
               title="Community Forum"
               description="Connect with others for support"
-              onPress={() => navigateTo('communityForum')}
+              onPress={() => navigateTo('community/page')}
             />
             <FeatureCard
               icon="exclamation-triangle"
@@ -102,10 +101,10 @@ export default function HomeScreen() {
               onPress={() => navigateTo('first-aid/page')}
             />
             <FeatureCard
-              icon="user-md"
-              title="Meet a Doctor"
-              description="Consult with a doctor online"
-              onPress={() => navigateTo('meetDoctor')}
+              icon="heartbeat"
+              title="Intergrate wearables"
+              description="Connect your wearable devices"
+              onPress={() => navigateTo('intergrations/page')}
             />
             <FeatureCard
               icon="hands-helping"
